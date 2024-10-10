@@ -1,0 +1,1580 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API do Projeto Integrador Senac",
+    "description": "Esta API tem como objetivo facilitar a criação de avisos para os discentes do Mediotech Senac, assim como o gerenciamento de suas notas por parte do professor.",
+    "version": "1.0.0",
+    "contact": {
+      "email": "rogercaua@outlook.com.br"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000/api",
+      "description": "Servidor local de desenvolvimento"
+    },
+    {
+      "url": "https://backendpi-qkmq.onrender.com",
+      "description": "Servidor Publico"
+    }
+  ],
+  "paths": {
+    "paths": {
+      "/coordenador": {
+        "post": {
+          "tags": ["coordenador"],
+          "summary": "Cria um novo coordenador",
+          "requestBody": {
+            "description": "Dados do novo coordenador",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "example": "coordenador@exemplo.com"
+                    },
+                    "nome": {
+                      "type": "string",
+                      "example": "João Silva"
+                    },
+                    "senha": {
+                      "type": "string",
+                      "example": "senha123"
+                    }
+                  },
+                  "required": ["email", "nome", "senha"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Coordenador criado com sucesso"
+            },
+            "400": {
+              "description": "Erro de validação"
+            },
+            "500": {
+              "description": "Erro no servidor"
+            }
+          }
+        }
+      },
+      "/coordenador/delete/{id}": {
+        "delete": {
+          "tags": ["coordenador"],
+          "summary": "Deleta um coordenador",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "description": "ID do coordenador a ser deletado",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Coordenador deletado com sucesso"
+            },
+            "400": {
+              "description": "ID não fornecido ou inválido"
+            },
+            "404": {
+              "description": "Coordenador não encontrado"
+            },
+            "500": {
+              "description": "Erro no servidor"
+            }
+          }
+        }
+      },
+      "/coordenador/update": {
+        "put": {
+          "tags": ["coordenador"],
+          "summary": "Atualiza os dados de um coordenador",
+          "requestBody": {
+            "description": "ID do coordenador e dados para atualização",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "coordenadorId": {
+                      "type": "string",
+                      "example": "64f72be69d23b1b1fc7f8e4a"
+                    },
+                    "nome": {
+                      "type": "string",
+                      "example": "Novo Nome"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "novocoordenador@exemplo.com"
+                    }
+                  },
+                  "required": ["coordenadorId"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Coordenador atualizado com sucesso"
+            },
+            "400": {
+              "description": "ID inválido ou campos faltando"
+            },
+            "404": {
+              "description": "Coordenador não encontrado"
+            },
+            "500": {
+              "description": "Erro no servidor"
+            }
+          }
+        }
+      }
+    },
+
+    "/avisos/create": {
+      "post": {
+        "summary": "Criação de Aviso",
+        "description": "Cria um aviso para uma turma e disciplina específicos.",
+        "tags": ["Avisos"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": { "type": "string" },
+                  "descricao": { "type": "string" },
+                  "turma": { "type": "string" },
+                  "disciplina": { "type": "string" }
+                },
+                "required": ["nome", "descricao", "turma", "disciplina"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Aviso criado com sucesso"
+          },
+          "404": {
+            "description": "Professor ou turma ou disciplina não encontrada"
+          },
+          "500": {
+            "description": "Erro ao criar aviso"
+          }
+        }
+      }
+    },
+    "/avisos": {
+      "get": {
+        "summary": "Listar Avisos",
+        "description": "Retorna todos os avisos criados pelo usuário autenticado.",
+        "tags": ["Avisos"],
+        "responses": {
+          "200": {
+            "description": "Avisos encontrados com sucesso"
+          },
+          "404": {
+            "description": "Nenhum aviso encontrado"
+          },
+          "500": {
+            "description": "Erro ao buscar avisos"
+          }
+        }
+      }
+    },
+    "/avisos/coordenador": {
+      "post": {
+        "summary": "Criação de Aviso pelo Coordenador",
+        "description": "Cria um aviso para todas as turmas.",
+        "tags": ["Avisos"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": { "type": "string" },
+                  "descricao": { "type": "string" }
+                },
+                "required": ["nome", "descricao"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Aviso criado com sucesso"
+          },
+          "404": {
+            "description": "Coordenador não encontrado"
+          },
+          "500": {
+            "description": "Erro ao criar aviso"
+          }
+        }
+      }
+    },
+    "/avisos/{id}": {
+      "put": {
+        "summary": "Atualizar Aviso",
+        "description": "Atualiza um aviso existente.",
+        "tags": ["Avisos"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID do aviso a ser atualizado"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": { "type": "string" },
+                  "descricao": { "type": "string" },
+                  "turma": { "type": "string" },
+                  "disciplina": { "type": "string" }
+                },
+                "required": ["nome", "descricao"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Aviso atualizado com sucesso"
+          },
+          "404": {
+            "description": "Aviso não encontrado"
+          },
+          "500": {
+            "description": "Erro ao atualizar aviso"
+          }
+        }
+      }
+    },
+    "/alunos/create": {
+      "post": {
+        "tags": ["Alunos"],
+        "summary": "Cria um novo aluno",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": {
+                    "type": "string",
+                    "example": "João da Silva"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "joao@example.com"
+                  },
+                  "senha": {
+                    "type": "string",
+                    "example": "senhaSegura123"
+                  },
+                  "turma": {
+                    "type": "string",
+                    "example": "60b8d7ef0c3c1f3f84c3f748"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Aluno criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Aluno criado com sucesso!"
+                    },
+                    "aluno": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "60b8d7ef0c3c1f3f84c3f749"
+                        },
+                        "nome": {
+                          "type": "string",
+                          "example": "João da Silva"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "joao@example.com"
+                        },
+                        "turma": {
+                          "type": "string",
+                          "example": "60b8d7ef0c3c1f3f84c3f748"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "500": {
+            "description": "Erro ao criar aluno"
+          }
+        }
+      }
+    },
+    "/alunos": {
+      "get": {
+        "tags": ["Alunos"],
+        "summary": "Retorna todos os alunos",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de alunos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "example": "60b8d7ef0c3c1f3f84c3f749"
+                      },
+                      "nome": {
+                        "type": "string",
+                        "example": "João da Silva"
+                      },
+                      "email": {
+                        "type": "string",
+                        "example": "joao@example.com"
+                      },
+                      "turma": {
+                        "type": "string",
+                        "example": "60b8d7ef0c3c1f3f84c3f748"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao obter alunos"
+          }
+        }
+      }
+    },
+    "/alunos/delete": {
+      "delete": {
+        "tags": ["Alunos"],
+        "summary": "Deleta um aluno",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "alunoId": {
+                    "type": "string",
+                    "example": "60b8d7ef0c3c1f3f84c3f749"
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Aluno deletado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Aluno deletado com sucesso!"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "ID do aluno não fornecido ou inválido"
+            },
+            "404": {
+              "description": "Aluno não encontrado"
+            },
+            "500": {
+              "description": "Erro ao deletar aluno"
+            }
+          }
+        }
+      }
+    },
+    "/alunos/update": {
+      "put": {
+        "tags": ["Alunos"],
+        "summary": "Atualiza um aluno",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "alunoId": {
+                    "type": "string",
+                    "example": "60b8d7ef0c3c1f3f84c3f749"
+                  },
+                  "nome": {
+                    "type": "string",
+                    "example": "João da Silva"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "joao.novo@example.com"
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Aluno atualizado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Aluno atualizado com sucesso!"
+                      },
+                      "aluno": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "60b8d7ef0c3c1f3f84c3f749"
+                          },
+                          "nome": {
+                            "type": "string",
+                            "example": "João da Silva"
+                          },
+                          "email": {
+                            "type": "string",
+                            "example": "joao.novo@example.com"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "ID do aluno inválido"
+            },
+            "404": {
+              "description": "Aluno não encontrado"
+            },
+            "500": {
+              "description": "Erro ao atualizar aluno"
+            }
+          }
+        }
+      }
+    },
+    "/professores": {
+      "get": {
+        "tags": ["Professores"],
+        "summary": "Retorna todos os professores",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de professores",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "example": "60b8d7ef0c3c1f3f84c3f749"
+                      },
+                      "user": {
+                        "type": "string",
+                        "example": "Professor"
+                      },
+                      "nome": {
+                        "type": "string",
+                        "example": "Maria da Silva"
+                      },
+                      "email": {
+                        "type": "string",
+                        "example": "maria@example.com"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao obter professores"
+          }
+        }
+      }
+    },
+    "/professores/create": {
+      "post": {
+        "tags": ["Professores"],
+        "summary": "Cria um novo professor",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": {
+                    "type": "string",
+                    "example": "Maria da Silva"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "maria@example.com"
+                  },
+                  "senha": {
+                    "type": "string",
+                    "example": "senhaSegura123"
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Professor criado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "status": {
+                        "type": "string",
+                        "example": "Success"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Professor criado com sucesso!"
+                      },
+                      "professor": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "60b8d7ef0c3c1f3f84c3f749"
+                          },
+                          "user": {
+                            "type": "string",
+                            "example": "Professor"
+                          },
+                          "nome": {
+                            "type": "string",
+                            "example": "Maria da Silva"
+                          },
+                          "email": {
+                            "type": "string",
+                            "example": "maria@example.com"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Dados inválidos"
+            },
+            "500": {
+              "description": "Erro ao criar professor"
+            }
+          }
+        }
+      }
+    },
+    "/professores/delete": {
+      "delete": {
+        "tags": ["Professores"],
+        "summary": "Deleta um professor",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "60b8d7ef0c3c1f3f84c3f749"
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Professor deletado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "status": {
+                        "type": "string",
+                        "example": "Success"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Professor deletado com sucesso"
+                      },
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "60b8d7ef0c3c1f3f84c3f749"
+                          },
+                          "user": {
+                            "type": "string",
+                            "example": "Professor"
+                          },
+                          "nome": {
+                            "type": "string",
+                            "example": "Maria da Silva"
+                          },
+                          "email": {
+                            "type": "string",
+                            "example": "maria@example.com"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "ID do professor não fornecido ou inválido"
+            },
+            "404": {
+              "description": "Professor não encontrado"
+            },
+            "500": {
+              "description": "Erro ao deletar professor"
+            }
+          }
+        }
+      }
+    },
+    "/professores/update": {
+      "put": {
+        "tags": ["Professores"],
+        "summary": "Atualiza um professor",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "60b8d7ef0c3c1f3f84c3f749"
+                  },
+                  "nome": {
+                    "type": "string",
+                    "example": "Maria da Silva"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "maria.novo@example.com"
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Professor atualizado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "status": {
+                        "type": "string",
+                        "example": "Success"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Professor atualizado com sucesso!"
+                      },
+                      "professor": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "60b8d7ef0c3c1f3f84c3f749"
+                          },
+                          "user": {
+                            "type": "string",
+                            "example": "Professor"
+                          },
+                          "nome": {
+                            "type": "string",
+                            "example": "Maria da Silva"
+                          },
+                          "email": {
+                            "type": "string",
+                            "example": "maria.novo@example.com"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "ID do professor inválido"
+            },
+            "404": {
+              "description": "Professor não encontrado"
+            },
+            "500": {
+              "description": "Erro ao atualizar professor"
+            }
+          }
+        }
+      }
+    },
+    "/disciplina/create": {
+      "post": {
+        "tags": ["Disciplinas"],
+        "summary": "Criar uma nova disciplina",
+        "operationId": "createDisciplina",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateDisciplina"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Disciplina criada com sucesso"
+          },
+          "404": {
+            "description": "Professor não encontrado"
+          },
+          "500": {
+            "description": "Erro ao criar disciplina"
+          }
+        }
+      }
+    },
+    "/disciplina": {
+      "get": {
+        "tags": ["Disciplinas"],
+        "summary": "Listar todas as disciplinas",
+        "operationId": "getAllDisciplinas",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Lista de disciplinas",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "500": {
+            "description": "Erro ao buscar disciplinas"
+          }
+        }
+      }
+    },
+    "/disciplina/delete": {
+      "delete": {
+        "tags": ["Disciplinas"],
+        "summary": "Deletar uma disciplina",
+        "operationId": "deleteDisciplina",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Disciplina deletada com sucesso"
+          },
+          "404": {
+            "description": "Disciplina não encontrada"
+          },
+          "500": {
+            "description": "Erro ao deletar disciplina"
+          }
+        }
+      }
+    },
+    "/disciplina/delete/all": {
+      "delete": {
+        "tags": ["Disciplinas"],
+        "summary": "Deletar todas as disciplinas",
+        "operationId": "deleteAllDisciplinas",
+        "responses": {
+          "200": {
+            "description": "Todas as disciplinas foram deletadas com sucesso"
+          },
+          "500": {
+            "description": "Erro ao deletar disciplinas"
+          }
+        }
+      }
+    },
+    "/turma/create": {
+      "post": {
+        "summary": "Create a new turma",
+        "tags": ["Turmas"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": {
+                    "type": "string",
+                    "description": "The name of the turma"
+                  },
+                  "disciplinas": {
+                    "type": "array",
+                    "description": "Array of discipline IDs or names",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "turno": {
+                    "type": "string",
+                    "description": "The shift of the turma (e.g., morning, afternoon)"
+                  }
+                },
+                "required": ["nome", "disciplinas", "turno"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Turma created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "turma": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string"
+                        },
+                        "nome": {
+                          "type": "string"
+                        },
+                        "disciplinas": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "turno": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/turma": {
+      "get": {
+        "summary": "Get all turmas",
+        "tags": ["Turmas"],
+        "responses": {
+          "200": {
+            "description": "A list of turmas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string"
+                      },
+                      "nome": {
+                        "type": "string"
+                      },
+                      "turno": {
+                        "type": "string"
+                      },
+                      "disciplinas": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "_id": {
+                              "type": "string"
+                            },
+                            "nome": {
+                              "type": "string"
+                            },
+                            "professor": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/turma/delete/{id}": {
+      "delete": {
+        "summary": "Delete a turma by ID",
+        "tags": ["Turmas"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the turma to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Turma deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Turma not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/coordenador/create": {
+      "post": {
+        "tags": ["Coordenador"],
+        "summary": "Criar um coordenador",
+        "description": "Cria um novo coordenador.",
+        "parameters": [
+          {
+            "name": "coordenador",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "coordenador@example.com"
+                },
+                "nome": {
+                  "type": "string",
+                  "example": "Nome do Coordenador"
+                },
+                "senha": {
+                  "type": "string",
+                  "example": "senhaSecreta"
+                }
+              },
+              "required": ["email", "nome", "senha"]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Coordenador criado com sucesso!",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Coordenador criado com sucesso!"
+                },
+                "coordenador": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "string",
+                      "example": "Coordenador"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "coordenador@example.com"
+                    },
+                    "nome": {
+                      "type": "string",
+                      "example": "Nome do Coordenador"
+                    },
+                    "senha": {
+                      "type": "string",
+                      "example": "senhaSecreta"
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "60d21b4667d0d8992e610c85"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de validação",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Todos os campos devem ser fornecidos"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao criar coordenador",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Erro ao criar coordenador"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "Mensagem de erro específica"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coordenador/delete": {
+      "delete": {
+        "tags": ["Coordenador"],
+        "summary": "Deletar um coordenador",
+        "description": "Remove um coordenador pelo ID ou nome.",
+        "parameters": [
+          {
+            "name": "coordenador",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "coordenador": {
+                  "type": "string",
+                  "example": "60d21b4667d0d8992e610c85"
+                }
+              },
+              "required": ["coordenador"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Coordenador deletado com sucesso!",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Coordenador deletado com sucesso!"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de validação",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "ID ou nome do coordenador não fornecido"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Coordenador não encontrado",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Coordenador não encontrado"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao deletar coordenador",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Erro ao deletar coordenador"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "Mensagem de erro específica"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coordenador/update": {
+      "put": {
+        "tags": ["Coordenador"],
+        "summary": "Atualizar um coordenador",
+        "description": "Atualiza as informações de um coordenador existente.",
+        "parameters": [
+          {
+            "name": "coordenador",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "coordenadorId": {
+                  "type": "string",
+                  "example": "60d21b4667d0d8992e610c85"
+                },
+                "nome": {
+                  "type": "string",
+                  "example": "Novo Nome do Coordenador"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "novoemail@example.com"
+                }
+              },
+              "required": ["coordenadorId"]
+            }   
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Coordenador atualizado com sucesso!",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Coordenador atualizado com sucesso!"
+                },
+                "coordenador": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "string",
+                      "example": "Coordenador"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "novoemail@example.com"
+                    },
+                    "nome": {
+                      "type": "string",
+                      "example": "Novo Nome do Coordenador"
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "60d21b4667d0d8992e610c85"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de validação",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "ID do coordenador e pelo menos um campo para atualizar devem ser fornecidos"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Coordenador não encontrado",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Coordenador não encontrado"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao atualizar coordenador",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Erro ao atualizar coordenador"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "Mensagem de erro específica"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/conceito/turmadisciplina": {
+      "get": {
+        "tags": ["Conceitos"],
+        "summary": "Obter conceitos por turma e disciplina",
+        "description": "Busca todos os conceitos de uma turma específica em uma disciplina.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "turma",
+            "description": "ID ou nome da turma",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "disciplina",
+            "description": "ID ou nome da disciplina",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Conceitos retornados com sucesso",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Conceito"
+              }
+            }
+          },
+          "400": {
+            "description": "ID ou nome da turma e disciplina não fornecidos"
+          },
+          "404": {
+            "description": "Nenhum conceito encontrado para a turma e disciplina especificadas"
+          },
+          "500": {
+            "description": "Erro ao buscar conceitos"
+          }
+        }
+      }
+    },
+    "/conceito/unidade": {
+      "put": {
+        "tags": ["Conceitos"],
+        "summary": "Atualizar a nota de uma unidade",
+        "description": "Atualiza as notas de uma unidade específica (unidade1, unidade2 ou unidade3).",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "alunoId",
+            "description": "ID do aluno",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "disciplinaId",
+            "description": "ID da disciplina",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "unidade",
+            "description": "Unidade (unidade1, unidade2, unidade3)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "notas",
+            "description": "Notas a serem atualizadas",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notas atualizadas com sucesso"
+          },
+          "400": {
+            "description": "ID do aluno, disciplina, unidade ou notas não fornecidos"
+          },
+          "404": {
+            "description": "Conceito não encontrado"
+          },
+          "500": {
+            "description": "Erro ao atualizar conceito"
+          }
+        }
+      }
+    },
+    "/conceito/anual": {
+      "put": {
+        "tags": ["Conceitos"],
+        "summary": "Atualizar a nota anual",
+        "description": "Atualiza a nota de MFA, FT, MFAPN ou resumo para uma disciplina.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "alunoId",
+            "description": "ID do aluno",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "disciplinaId",
+            "description": "ID da disciplina",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "tipoNota",
+            "description": "Tipo de nota (MFA, FT, MFAPN, resumo)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "valor",
+            "description": "Valor da nota",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Nota atualizada com sucesso"
+          },
+          "400": {
+            "description": "Tipo de nota inválido ou dados ausentes"
+          },
+          "404": {
+            "description": "Conceito não encontrado"
+          },
+          "500": {
+            "description": "Erro ao atualizar conceito"
+          }
+        }
+      }
+    }
+  },
+ "definitions": {
+    "Conceito": {
+      "type": "object",
+      "properties": {
+        "aluno": {
+          "type": "string"
+        },
+        "disciplina": {
+          "type": "string"
+        },
+        "unidade1": {
+          "type": "object"
+        },
+        "unidade2": {
+          "type": "object"
+        },
+        "unidade3": {
+          "type": "object"
+        },
+        "MFA": {
+          "type": "number"
+        },
+        "FT": {
+          "type": "number"
+        },
+        "MFAPN": {
+          "type": "number"
+        },
+        "resumo": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}
