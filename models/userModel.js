@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema({
   turma: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Turma", 
-    required: function() { return this.user === "Aluno"; } // Apenas para Alunos
+    required: function() { return this.user === "Aluno"; } 
   },
   turmas: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -41,7 +41,7 @@ UserSchema.methods.toJSON = function() {
   const userObject = this.toObject();
 
   if (userObject.user !== "Aluno") {
-    delete userObject.conceitos; // Corrigido de conceito para conceitos
+    delete userObject.conceitos; 
     delete userObject.turma;
   }
   
