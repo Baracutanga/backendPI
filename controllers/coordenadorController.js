@@ -55,22 +55,18 @@ exports.updateCoordenador = async (req, res) => {
   try {
     const { coordenadorId, nome, email } = req.body;
 
-    // Verifica se o ID do coordenador foi fornecido
     if (!coordenadorId || (!nome && !email)) {
       return res.status(400).json({ message: "ID do coordenador e pelo menos um campo para atualizar devem ser fornecidos" });
     }
 
-    // Verifica se o ID fornecido é válido
     if (!mongoose.Types.ObjectId.isValid(coordenadorId)) {
       return res.status(400).json({ message: "ID inválido" });
     }
 
-    // Cria o objeto de atualização com os dados fornecidos
     const updates = {};
     if (nome) updates.nome = nome;
     if (email) updates.email = email;
 
-    // Atualiza o coordenador com base no ID
     const coordenadorAtualizado = await User.findByIdAndUpdate(
       coordenadorId,
       { $set: updates },
