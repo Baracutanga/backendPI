@@ -1,29 +1,26 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
-require("dotenv") .config();
+require("dotenv").config();
 
-module.exports = async (req, res, next) => {
-  const authHeader = req.header("Authorization");
-  if (!authHeader) {
-    return res.status(401).json({ message: "Sem token, autorização negada" });
-  }
-  
-  const token = authHeader.split(" ")[1];
-  if (!token) {
-    return res.status(401).json({ message: "Sem token, autorização negada" });
-  }
-
+const authenticateCoordenador = async (req, res, next) => {
   try {
-    
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); 
-    req.user = await User.findById(decoded.id);
-    
-    if (!req.user || req.user.user !== "Coordenador") {
-      return res.status(401).json({ message: "Usuário não encontrado ou não autorizado" });
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+    if (!token) {
+      return res.status(401).json({ message: "Acesso negado. Token não fornecido." });
     }
 
-    next(); 
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+
+    if (!user || user.user !== "Coordenador") {
+      return res.status(403).json({ message: "Acesso negado. Apenas Coordenadores podem acessar." });
+    }
+
+    req.user = user;
+    next();
   } catch (error) {
-    res.status(401).json({ message: "Token não válido" });
+    res.status(401).json({ message: "Token inválido ou expirado." });
   }
 };
+
+module.exports = authenticateCoordenador;

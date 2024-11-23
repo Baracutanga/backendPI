@@ -12,6 +12,10 @@
     {
       "url": "http://localhost:8000/api",
       "description": "Servidor local de desenvolvimento"
+    },
+    {
+      "url": "https://backend-pi-lf34.onrender.com",
+      "description": "Servidor Publico"
     }
   ],
   "paths": {
@@ -338,7 +342,7 @@
                           "type": "string",
                           "example": "60b8d7ef0c3c1f3f84c3f748"
                         }
-                      }
+                     }
                     }
                   }
                 }

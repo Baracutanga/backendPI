@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 require("dotenv").config();
 
-const authenticateProfessor = async (req, res, next) => {
+const authenticateProfCoord = async (req, res, next) => {
   try {
     const token = req.header("Authorization")?.replace("Bearer ", "");
     if (!token) {
@@ -12,8 +12,8 @@ const authenticateProfessor = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id);
 
-    if (!user || user.user !== "Professor") {
-      return res.status(403).json({ error: "Acesso negado. Apenas Professores podem acessar." });
+    if (!user || user.user !== "Professor" || user.user != "Coordenador") {
+      return res.status(403).json({ error: "Acesso negado. Apenas Professores ou Coordenadores podem acessar." });
     }
 
     req.user = user;
@@ -23,4 +23,4 @@ const authenticateProfessor = async (req, res, next) => {
   }
 };
 
-module.exports = authenticateProfessor;
+module.exports = authenticateProfCoord;

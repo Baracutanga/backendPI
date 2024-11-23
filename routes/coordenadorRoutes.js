@@ -7,8 +7,12 @@ const autenticaMiddlewareCoordenador = require("../middleware/autenticaMiddlewar
 router.post("/create", coordenadorController.createCoordenador);
  
 // Rota para deletar um coordenador
-router.delete("/delete", coordenadorController.deleteCoordenador);
+router.delete("/delete", autenticaMiddlewareCoordenador, coordenadorController.deleteCoordenador);
 
-router.put("/update", coordenadorController.updateCoordenador);
+router.put("/update", autenticaMiddlewareCoordenador, coordenadorController.updateCoordenador);
+
+router.get("/", coordenadorController.getAllCoordenadores);
+
+
 
 module.exports = router;

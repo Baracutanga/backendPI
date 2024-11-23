@@ -4,10 +4,12 @@ const conceitoController = require("../controllers/conceitoController");
 const autenticaMiddlewareProfessor = require("../middleware/autenticaMiddlewareProfessor")
 const autenticaMiddlewareCoordenador = require("../middleware/autenticaMiddlewareCoordenador")
 
-router.get("/turmadisciplina", conceitoController.getConceitosPorTurmaEDisciplina)
+//getAll por turma e disciplina 
+router.get("/turmadisciplina", autenticaMiddlewareProfessor, autenticaMiddlewareCoordenador, conceitoController.getConceitosPorTurmaEDisciplina)
 
-router.put("/unidade", conceitoController.updateNotaUnidade);
+// Adicionar/atualizar a nota de uma unidade
+router.put("/unidade", autenticaMiddlewareProfessor, autenticaMiddlewareCoordenador, conceitoController.updateNotaUnidade);
 
-router.put("/anual", conceitoController.updateAnual);
+router.put("/anual", autenticaMiddlewareProfessor, autenticaMiddlewareCoordenador, conceitoController.updateAnual);
 
 module.exports = router;

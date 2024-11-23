@@ -4,12 +4,12 @@ const alunoController = require("../controllers/alunoController")
 const autenticaMiddlewareCoordenador = require("../middleware/autenticaMiddlewareCoordenador")
 const autenticaMiddlewareProfessor = require("../middleware/autenticaMiddlewareProfessor")
 
-router.post("/create", alunoController.createAluno);
+router.post("/create", autenticaMiddlewareCoordenador, alunoController.createAluno);
 
-router.get("/",  alunoController.getAllAlunos);
+router.get("/",autenticaMiddlewareCoordenador, alunoController.getAllAlunos);
 
-router.delete("/delete", alunoController.deleteAluno);
+router.delete("/delete",autenticaMiddlewareCoordenador, alunoController.deleteAluno);
 
-router.put("/update", alunoController.updateAluno);
+router.put("/update", autenticaMiddlewareCoordenador, alunoController.updateAluno);
 
 module.exports = router;

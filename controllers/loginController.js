@@ -1,6 +1,6 @@
 const User = require('../models/userModel');
-const jwt = require('jsonwebtoken');
-require('dotenv').config(); s
+const jwt = require('jsonwebtoken'); // Certifique-se de usar 'jsonwebtoken'
+require('dotenv').config(); // Para garantir que as variáveis de ambiente sejam carregadas
 
 exports.login = async (req, res) => {
   try {

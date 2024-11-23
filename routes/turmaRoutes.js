@@ -3,10 +3,10 @@ const router = express.Router();
 const turmaController = require('../controllers/turmaController');
 const autenticaMiddlewareCoordenador = require("../middleware/autenticaMiddlewareCoordenador")
 
-router.post('/create',  turmaController.createTurma);
+router.post('/create', autenticaMiddlewareCoordenador, turmaController.createTurma);
 
-router.get('/', turmaController.getAllTurmas);
+router.get('/', autenticaMiddlewareCoordenador, turmaController.getAllTurmas);
 
-router.delete('/delete/:id?', turmaController.deleteTurma);
+router.delete('/delete/:id?', autenticaMiddlewareCoordenador, turmaController.deleteTurma);
 
 module.exports = router;

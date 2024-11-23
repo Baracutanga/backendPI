@@ -1,7 +1,6 @@
 const Conceito = require('../models/conceitoModel');
 const Turma = require('../models/turmaModel');
 const Disciplina = require('../models/disciplinaModel');
-const mongoose = require('mongoose');
 
 exports.updateNotaUnidade = async (req, res) => {
   try {

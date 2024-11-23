@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose"); 
@@ -17,22 +18,29 @@ const turmaRoutes = require("./routes/turmaRoutes");
 const conceitoRoutes = require("./routes/conceitoRoutes"); 
 const loginRoutes = require("./routes/loginRoutes");
 
+
+
 dotenv.config();
 
-const DB = process.env.DATABASE;
+DB = "mongodb+srv://rogercauarcb:1500@users.wq3oh.mongodb.net/projetoIntegrador";
 
 mongoose.connect(DB)
-    .then(() => console.log("Conectado ao Banco de Dados"))
-    .catch(err => console.log("Erro ao Conectar ao Banco de dados", err));
+.then(() => console.log("Conectado ao Banco de Dados"))
+.catch(err => console.log("Erro ao Conectar ao Banco de dados", err));
+
+
 
 app.use(helmet());
+
 app.use(cors());
 
 if (process.env.NODE_ENV === "development") {
-    app.use(morgan("dev"));
+  app.use(morgan("dev"));
 }
 
 app.use(express.json());
+
+app.use(bodyParser.json());
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -48,5 +56,6 @@ app.use("/api/login", loginRoutes);
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {
-    console.log(`Server está rodando na porta ${PORT}`);
+  console.log(`Server está rodando na porta ${PORT}`);
 });
+

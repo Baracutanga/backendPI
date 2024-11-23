@@ -51,9 +51,9 @@ exports.createAluno = async (req, res) => {
     turmaEncontrada.alunos.push(novoAluno._id);
     await turmaEncontrada.save();
 
-    return res.status(201).json({ message: 'Aluno criado com sucesso!', aluno: novoAluno });
+    return res.status(201).json({ message: 'Aluno criado com sucesso!', aluno: novoAluno }); // Adiciona return aqui
   } catch (error) {
-    return res.status(500).json({ message: "Erro ao criar aluno", error: error.message });
+    return res.status(500).json({ message: "Erro ao criar aluno", error: error.message }); // Adiciona return aqui
   }
 };
 
@@ -61,10 +61,11 @@ exports.getAllAlunos = async (req, res) => {
   try {
     const alunos = await User.find({ user: "Aluno" }).populate('turma'); 
 
-    return res.status(200).json(alunos); 
+    return res.status(200).json(alunos); // Adiciona return aqui
 
   } catch (error) {
-    return res.status(500).json({ message: "Erro ao obter alunos", error: error.message }); 
+    return res.status(500).json({ message: "Erro ao obter alunos", error: error.message }); // Adiciona return aqui
+  }
 };
 
 exports.deleteAluno = async (req, res) => {
@@ -96,39 +97,41 @@ exports.deleteAluno = async (req, res) => {
       await turmaEncontrada.save();
     }
 
-    return res.status(200).json({ message: 'Aluno deletado com sucesso!' }); 
+    return res.status(200).json({ message: 'Aluno deletado com sucesso!' }); // Adiciona return aqui
   } catch (error) {
-    return res.status(500).json({ message: "Erro ao deletar aluno", error: error.message }); 
+    return res.status(500).json({ message: "Erro ao deletar aluno", error: error.message }); // Adiciona return aqui
   }
 };
 
 exports.updateAluno = async (req, res) => {
   try {
-    const { alunoId, nome, email } = req.body; 
+    const { alunoId, nome, email } = req.body; // Campos a serem atualizados
 
-  
+    // Verifica se o ID do aluno é válido
     if (!mongoose.Types.ObjectId.isValid(alunoId)) {
       return res.status(400).json({ message: "ID do aluno inválido" });
     }
 
+    // Encontra o aluno pelo ID
     const aluno = await User.findById(alunoId);
     
     if (!aluno || aluno.user !== "Aluno") {
       return res.status(404).json({ message: "Aluno não encontrado" });
     }
 
-   
+    // Atualiza os campos fornecidos se eles existirem no corpo da requisição
     if (nome) {
-      aluno.nome = nome;
+      aluno.nome = nome; // Atualiza o nome se fornecido
     }
     if (email) {
-      aluno.email = email;
+      aluno.email = email; // Atualiza o email se fornecido
     }
 
+    // Salva as alterações no banco de dados
     await aluno.save();
 
-    return res.status(200).json({ message: "Aluno atualizado com sucesso!", aluno });
+    return res.status(200).json({ message: "Aluno atualizado com sucesso!", aluno }); // Adiciona return aqui
   } catch (error) {
-    return res.status(500).json({ message: "Erro ao atualizar aluno", error: error.message });
+    return res.status(500).json({ message: "Erro ao atualizar aluno", error: error.message }); // Adiciona return aqui
   }
 };

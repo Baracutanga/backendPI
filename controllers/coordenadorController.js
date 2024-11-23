@@ -55,18 +55,22 @@ exports.updateCoordenador = async (req, res) => {
   try {
     const { coordenadorId, nome, email } = req.body;
 
+    // Verifica se o ID do coordenador foi fornecido
     if (!coordenadorId || (!nome && !email)) {
       return res.status(400).json({ message: "ID do coordenador e pelo menos um campo para atualizar devem ser fornecidos" });
     }
 
+    // Verifica se o ID fornecido é válido
     if (!mongoose.Types.ObjectId.isValid(coordenadorId)) {
       return res.status(400).json({ message: "ID inválido" });
     }
 
+    // Cria o objeto de atualização com os dados fornecidos
     const updates = {};
     if (nome) updates.nome = nome;
     if (email) updates.email = email;
 
+    // Atualiza o coordenador com base no ID
     const coordenadorAtualizado = await User.findByIdAndUpdate(
       coordenadorId,
       { $set: updates },
@@ -78,7 +82,17 @@ exports.updateCoordenador = async (req, res) => {
     }
 
     return res.status(200).json({ message: 'Coordenador atualizado com sucesso!', coordenador: coordenadorAtualizado });
-  } catch (error) {
-    return res.status(500).json({ message: "Erro ao atualizar coordenador", error: error.message });
+  } catch (err) {
+    return res.status(500).json({ message: "Erro ao atualizar coordenador", error: err.message });
   }
 };
+
+exports.getAllCoordenadores = async (req, res) => {
+  try{
+    const coordenadores = await User.find({ user: "Coordenador" });
+
+    return res.status(200).json(coordenadores);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+}
