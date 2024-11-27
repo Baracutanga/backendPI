@@ -5,7 +5,7 @@ const turmaSchema = new mongoose.Schema({
   disciplinas: [{ type: mongoose.Schema.Types.ObjectId, ref: "Disciplina", required: true }],
   turno: { type: String, enum: ["Manhã", "Tarde", "Noite"], required: true },
   alunos: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-}, { timestamps: true });
+}, { timestamps: true }, { versionKey: false});
 
 const Turma = mongoose.model("Turma", turmaSchema);
 
