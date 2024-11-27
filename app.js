@@ -53,7 +53,7 @@ app.use("/api/aviso", avisoRoutes);
 app.use("/api/conceito", conceitoRoutes);
 app.use("/api/login", loginRoutes);
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
   console.log(`Server está rodando na porta ${PORT}`);
