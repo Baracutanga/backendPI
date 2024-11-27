@@ -1,6 +1,7 @@
 const Turma = require("../models/turmaModel");
 const Disciplina = require("../models/disciplinaModel");
 const User = require("../models/userModel");
+const mongoose = require("mongoose")
 
 exports.createTurma = async (req, res) => {
   try {
@@ -9,14 +10,23 @@ exports.createTurma = async (req, res) => {
 
     if (disciplinas && Array.isArray(disciplinas)) {
       for (const disciplina of disciplinas) {
-        const disciplinaExistente = await Disciplina.findById(disciplina) || await Disciplina.findOne({ nome: disciplina });
-
+        let disciplinaExistente
+      
+        if (mongoose.isValidObjectId(disciplina)) {
+          disciplinaExistente = await Disciplina.findById(disciplina);
+        }
+      
+        if (!disciplinaExistente) {
+          disciplinaExistente = await Disciplina.findOne({ nome: disciplina });
+        }
+      
         if (!disciplinaExistente) {
           return res.status(404).json({ message: `Disciplina não encontrada: ${disciplina}` });
         }
-
+      
         disciplinasExistentes.push(disciplinaExistente);
       }
+      
     } else {
       return res.status(400).json({ message: "Nenhuma disciplina foi fornecida ou o formato está incorreto." });
     }
