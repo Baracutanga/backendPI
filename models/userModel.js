@@ -24,9 +24,9 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Disciplina" 
   }]
-});
+}, { versionKey: false});
 
-// Pré-save para lidar com a senha e admin status
+
 UserSchema.pre("save", async function(next) {
   if (this.isModified("senha")) {
     this.senha = await bcrypt.hash(this.senha, 10);
@@ -41,7 +41,7 @@ UserSchema.methods.toJSON = function() {
   const userObject = this.toObject();
 
   if (userObject.user !== "Aluno") {
-    delete userObject.conceitos; // Corrigido de conceito para conceitos
+    delete userObject.conceitos; 
     delete userObject.turma;
   }
   
