@@ -3,7 +3,7 @@ const router = express.Router();
 const avisoController = require("../controllers/avisoController"); 
 const autenticaMiddlewareCoordenador = require("../middleware/autenticaMiddlewareCoordenador");
 const autenticaMiddlewareProfessor = require("../middleware/autenticaMiddlewareProfessor");
-const autenticaMiddlewareProfCoord = require('../middleware/autenticaMiddlewarepProfCoord');
+const autenticaMiddlewareProfCoord = require('../middleware/autenticaMiddlewareProfCoord');
 
 // Criar aviso de Professor
 router.post("/create/professor", autenticaMiddlewareProfCoord, avisoController.createAviso);

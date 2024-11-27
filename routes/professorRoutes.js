@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const professorController = require("../controllers/professorController");
 const autenticaMiddlewareCoordenador = require("../middleware/autenticaMiddlewareCoordenador")
-const autenticaMiddlewareProfCoord = require('../middleware/autenticaMiddlewarepProfCoord')
+const autenticaMiddlewareProfCoord = require('../middleware/autenticaMiddlewareProfCoord')
 
 router.get("/", autenticaMiddlewareCoordenador, professorController.getAllProfessores);
 
