@@ -12,9 +12,9 @@ router.post("/create/professor", autenticaMiddlewareProfCoord, avisoController.c
 router.post("/create/coordenador", avisoController.createAvisoCoordenador);
 
 // Atualizar aviso
-router.put("/:id", autenticaMiddlewareProfessor, autenticaMiddlewareCoordenador, avisoController.updateAviso);
+router.put("/:id", autenticaMiddlewareProfCoord, avisoController.updateAviso);
 
 // Obter todos os avisos do usuario logado
-router.get("/", autenticaMiddlewareProfessor, autenticaMiddlewareCoordenador, avisoController.getAllAvisos);
+router.get("/", autenticaMiddlewareProfCoord, avisoController.getAllAvisos);
 
 module.exports = router;
