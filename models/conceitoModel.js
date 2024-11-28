@@ -7,7 +7,7 @@ const unidadeSchema = new mongoose.Schema({
   MU: { type: Number, default: null },
   MUPN1: { type: Number, default: null },
   MUPN2: { type: Number, default: null },
-}, { _id: false });
+}, { _id: false }, { versionKey: false});
 
 const notasAlunoSchema = new mongoose.Schema({
   aluno:{ type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -19,6 +19,6 @@ const notasAlunoSchema = new mongoose.Schema({
   FT: { type: Number, default: 0 }, // Total de faltas
   MFAPN: { type: Number, default: null }, // Menção final anual pós NOA
   resumo: { type: String, default: null } // Resumo final do aluno
-});
+}, { versionKey: false});
 
   module.exports = mongoose.model("Conceito", notasAlunoSchema);
