@@ -6,7 +6,7 @@ const avisoSchema = new mongoose.Schema({
   turma: { type: [mongoose.Schema.Types.ObjectId], ref: "Turma", required: true },    
   disciplina: { type: mongoose.Schema.Types.ObjectId, ref: "Disciplina", required: true },
   autor: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true } 
-}, { timestamps: true }, { versionkey: true });
+}, { timestamps: true }, { versionKey: false });
 
 
 module.exports = mongoose.model("Aviso", avisoSchema);
