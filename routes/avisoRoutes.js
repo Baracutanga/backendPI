@@ -6,10 +6,10 @@ const autenticaMiddlewareProfessor = require("../middleware/autenticaMiddlewareP
 const autenticaMiddlewareProfCoord = require('../middleware/autenticaMiddlewareProfCoord');
 
 // Criar aviso de Professor
-router.post("/create/professor", autenticaMiddlewareProfCoord, avisoController.createAviso);
+router.post("/create/professor", autenticaMiddlewareProfessor, avisoController.createAviso);
 
 // Criar aviso de Coordenador (para todas as turmas)
-router.post("/create/coordenador", avisoController.createAvisoCoordenador);
+router.post("/create/coordenador",autenticaMiddlewareCoordenador, avisoController.createAvisoCoordenador);
 
 // Atualizar aviso
 router.put("/:id", autenticaMiddlewareProfCoord, avisoController.updateAviso);
