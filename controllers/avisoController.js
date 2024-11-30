@@ -2,31 +2,42 @@ const Aviso = require("../models/avisoModel");
 const Turma = require("../models/turmaModel");
 const Disciplina = require("../models/disciplinaModel");
 const User = require("../models/userModel");
+const mongoose = require("mongoose")
 
 exports.createAviso = async (req, res) => {
   try {
     const { nome, descricao, turma, disciplina } = req.body;
     const autor = req.user.id;
-
+    
     const autorExistente = await User.findById(autor);
     if (!autorExistente || autorExistente.user !== "Professor") {
       return res.status(404).json({ message: "Professor não encontrado." });
     }
 
     let turmaExistente;
-    if (turma) {
-      turmaExistente = await Turma.findById(turma) || await Turma.findOne({ nome: turma });
+    if (mongoose.isValidObjectId(turma)) {
+      turmaExistente = await Turma.findById(disciplina);
+    }
+  
+    if (!turmaExistente) {
+      turmaExistente = await Turma.findOne({ nome: turma });
     }
     if (!turmaExistente) {
       return res.status(404).json({ message: "Turma não encontrada." });
     }
 
-    let disciplinaExistente;
-    if (disciplina) {
-      disciplinaExistente = await Disciplina.findById(disciplina) || await Disciplina.findOne({ nome: disciplina });
+    let disciplinaExistente
+      
+    if (mongoose.isValidObjectId(disciplina)) {
+      disciplinaExistente = await Disciplina.findById(disciplina);
     }
+  
     if (!disciplinaExistente) {
-      return res.status(404).json({ message: "Disciplina não encontrada." });
+      disciplinaExistente = await Disciplina.findOne({ nome: disciplina });
+    }
+  
+    if (!disciplinaExistente) {
+      return res.status(404).json({ message: `Disciplina não encontrada: ${disciplina}` });
     }
 
     const novoAviso = new Aviso({
