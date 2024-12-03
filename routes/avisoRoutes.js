@@ -4,6 +4,7 @@ const avisoController = require("../controllers/avisoController");
 const autenticaMiddlewareCoordenador = require("../middleware/autenticaMiddlewareCoordenador");
 const autenticaMiddlewareProfessor = require("../middleware/autenticaMiddlewareProfessor");
 const autenticaMiddlewareProfCoord = require('../middleware/autenticaMiddlewareProfCoord');
+const autenticaMiddlewareAluno = require("../middleware/autenticaMiddlewareAluno");
 
 // Criar aviso de Professor
 router.post("/create/professor", autenticaMiddlewareProfessor, avisoController.createAviso);
@@ -18,6 +19,6 @@ router.put("/:id", autenticaMiddlewareProfCoord, avisoController.updateAviso);
 router.get("/", autenticaMiddlewareProfCoord, avisoController.getAllAvisos);
 
 // Obter os avisos do aluno
-router.get("/aluno", avisoController.getAvisoAluno);
+router.get("/aluno",autenticaMiddlewareAluno, avisoController.getAvisoAluno);
 
 module.exports = router;
