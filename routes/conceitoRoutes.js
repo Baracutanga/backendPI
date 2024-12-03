@@ -10,7 +10,7 @@ const autenticaMiddlewareProfCoord = require("../middleware/autenticaMiddlewareP
 router.get("/turmadisciplina", autenticaMiddlewareProfCoord, conceitoController.getConceitosPorTurmaEDisciplina);
 
 //getAll por turma e disciplina para a tela do aluno(Client), // Rota específica para alunos
-router.get("/alunos/turmadisciplina", autenticaMiddlewareAluno, conceitoController.getConceitosPorTurmaEDisciplinaAlunoClient);
+router.get("/alunos/turmadisciplina", autenticaMiddlewareAluno, conceitoController.getConceitosAluno);
 
 // Adicionar/atualizar a nota de uma unidade
 router.put("/unidade", autenticaMiddlewareProfessor, conceitoController.updateNotaUnidade);
