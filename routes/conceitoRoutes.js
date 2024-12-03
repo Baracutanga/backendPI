@@ -5,7 +5,10 @@ const autenticaMiddlewareProfessor = require("../middleware/autenticaMiddlewareP
 const autenticaMiddlewareCoordenador = require("../middleware/autenticaMiddlewareCoordenador")
 
 //getAll por turma e disciplina 
-router.get("/turmadisciplina", autenticaMiddlewareProfessor, autenticaMiddlewareCoordenador, conceitoController.getConceitosPorTurmaEDisciplina)
+router.get("/turmadisciplina", autenticaMiddlewareProfessor, autenticaMiddlewareCoordenador, conceitoController.getConceitosPorTurmaEDisciplina);
+
+//getAll por turma e disciplina para a tela do aluno(Client), // Rota específica para alunos
+router.get("/alunos/turmadisciplina", conceitoController.getConceitosPorTurmaEDisciplinaAlunoClient);
 
 // Adicionar/atualizar a nota de uma unidade
 router.put("/unidade", autenticaMiddlewareProfessor, autenticaMiddlewareCoordenador, conceitoController.updateNotaUnidade);

@@ -9,9 +9,6 @@ router.post("/create", autenticaMiddlewareCoordenador, alunoController.createAlu
 //getAll por turma e disciplina feito Pelo Adm(Coordenador), // Rota específica para coordenador
 router.get("/alunos",autenticaMiddlewareCoordenador, alunoController.getAllAlunos);
 
-//getAll por turma e disciplina para a tela do aluno(Client), // Rota específica para alunos
-router.get("/alunos/turmadisciplina", alunoController.getConceitosPorTurmaEDisciplinaAlunoClient)
-
 router.delete("/delete",autenticaMiddlewareCoordenador, alunoController.deleteAluno);
 
 router.put("/update", autenticaMiddlewareCoordenador, alunoController.updateAluno);
