@@ -102,3 +102,4 @@ exports.getConceitosPorTurmaEDisciplina = async (req, res) => {
     return res.status(500).json({ message: "Erro ao buscar conceitos", error: error.message });
   }
 };
+
