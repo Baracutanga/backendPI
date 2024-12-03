@@ -4,16 +4,18 @@ const conceitoController = require("../controllers/conceitoController");
 const autenticaMiddlewareAluno = require("../middleware/autenticaMiddlewareAluno");
 const autenticaMiddlewareProfessor = require("../middleware/autenticaMiddlewareProfessor");
 const autenticaMiddlewareCoordenador = require("../middleware/autenticaMiddlewareCoordenador");
+const autenticaMiddlewareProfCoord = require("../middleware/autenticaMiddlewareProfCoord");
 
 //getAll por turma e disciplina 
-router.get("/turmadisciplina", autenticaMiddlewareProfessor, autenticaMiddlewareCoordenador, conceitoController.getConceitosPorTurmaEDisciplina);
+router.get("/turmadisciplina", autenticaMiddlewareProfCoord, conceitoController.getConceitosPorTurmaEDisciplina);
 
 //getAll por turma e disciplina para a tela do aluno(Client), // Rota específica para alunos
-router.get("/alunos/turmadisciplina", autenticaMiddlewareAluno,conceitoController.getConceitosPorTurmaEDisciplinaAlunoClient);
+router.get("/alunos/turmadisciplina", autenticaMiddlewareAluno, conceitoController.getConceitosPorTurmaEDisciplinaAlunoClient);
 
 // Adicionar/atualizar a nota de uma unidade
-router.put("/unidade", autenticaMiddlewareProfessor, autenticaMiddlewareCoordenador, conceitoController.updateNotaUnidade);
+router.put("/unidade", autenticaMiddlewareProfessor, conceitoController.updateNotaUnidade);
 
-router.put("/anual", autenticaMiddlewareProfessor, autenticaMiddlewareCoordenador, conceitoController.updateAnual);
+// Adicionar/atualizar a nota do ano
+router.put("/anual", autenticaMiddlewareProfessor, conceitoController.updateAnual);
 
 module.exports = router;
