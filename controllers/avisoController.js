@@ -147,8 +147,31 @@ exports.getAllAvisos = async (req, res) => {
     return res
       .status(200)
       .json({ message: "Avisos encontrados com sucesso!", avisos });
-  } catch (error) {
-    console.error("Erro ao buscar avisos:", error);
-    return res.status(500).json({ message: "Erro ao buscar avisos", error });
+  } catch (err) {
+    console.error("Erro ao buscar avisos:", err);
+    return res.status(500).json({ message: "Erro ao buscar avisos", err });
+  }
+};
+
+exports.getAvisoAluno = async (req, res) => {
+  try {
+    const { disciplina } = req.body; 
+    const turma = req.user.turma; 
+   
+    const filtro = { turma }; 
+
+    if (disciplina) {
+      filtro.disciplina = disciplina; 
+    }
+
+    const avisos = await Aviso.find(filtro)
+      .populate("turma", "nome") 
+      .populate("disciplina", "nome") 
+      .populate("autor", "nome email"); 
+
+    res.status(200).json({ avisos });
+  } catch (err) {
+    console.error("Erro ao buscar avisos:", err);
+    return res.status(500).json({ message: "Erro ao buscar avisos", err });
   }
 };
