@@ -14,7 +14,7 @@ router.post("/create/coordenador",autenticaMiddlewareCoordenador, avisoControlle
 // Atualizar aviso
 router.put("/:id", autenticaMiddlewareProfCoord, avisoController.updateAviso);
 
-// Obter todos os avisos do usuario logado
+// Obter todos os avisos do usuario logado "Professor" ou "Coordenador"
 router.get("/", autenticaMiddlewareProfCoord, avisoController.getAllAvisos);
 
 module.exports = router;

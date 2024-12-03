@@ -141,7 +141,7 @@ exports.getConceitosPorTurmaEDisciplinaAlunoClient = async (req, res) => {
     if (!conceitos.length) {
       return res.status(404).json({ message: "Nenhum conceito encontrado para a disciplina especificada." });
     }
-    
+
     return res.status(200).json(conceitos);
   } catch (error) {
     return res.status(500).json({ message: "Erro ao buscar conceitos", error: error.message });
