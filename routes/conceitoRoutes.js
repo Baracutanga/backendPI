@@ -9,9 +9,6 @@ const autenticaMiddlewareProfCoord = require("../middleware/autenticaMiddlewareP
 //getAll por turma e disciplina 
 router.get("/turmadisciplina", autenticaMiddlewareProfCoord, conceitoController.getConceitosPorTurmaEDisciplina);
 
-//getAll 
-router.get("/", autenticaMiddlewareProfCoord, conceitoController.getConceitosAluno);
-
 //getAll por turma e disciplina para a tela do aluno(Client), // Rota específica para alunos
 router.get("/aluno", autenticaMiddlewareAluno, conceitoController.getConceitosAluno);
 
