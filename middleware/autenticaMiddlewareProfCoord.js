@@ -12,7 +12,7 @@ const authenticateProfCoord = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id);
 
-    if (!user || user.user != "Professor" || user.user != "Coordenador") {
+    if (!user || (user.user !== "Professor" && user.user !== "Coordenador")) {
       return res.status(403).json({ error: "Acesso negado. Apenas Professores ou Coordenadores podem acessar." });
     }
 
