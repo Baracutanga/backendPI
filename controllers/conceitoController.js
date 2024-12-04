@@ -1,16 +1,46 @@
 const Conceito = require('../models/conceitoModel');
 const Turma = require('../models/turmaModel');
 const Disciplina = require('../models/disciplinaModel');
+const User = require('../models/userModel');
+const mongoose = require('mongoose');
 
 exports.updateNotaUnidade = async (req, res) => {
   try {
-    const { alunoId, disciplinaId, unidade, notas } = req.body;
+    const { aluno, disciplina, unidade, notas } = req.body;
 
-    if (!alunoId || !disciplinaId || !unidade || !notas) {
+    if (!aluno || !disciplina  || !unidade || !notas) {
       return res.status(400).json({ message: "ID do aluno, disciplina, unidade ou notas não fornecidos" });
     }
+    let alunoExistente;
 
-    const conceito = await Conceito.findOne({ aluno: alunoId, disciplina: disciplinaId });
+    if (mongoose.isValidObjectId(aluno)) {
+      alunoExistente = await User.findById(aluno);
+    }
+
+    if (!alunoExistente) {
+      alunoExistente = await User.findOne({ nome: aluno });
+    }
+
+    if (!alunoExistente) {
+      return res.status(404).json({ message: `Aluno não encontrado: ${aluno}` });
+    }
+
+    let disciplinaExistente;
+
+    if (mongoose.isValidObjectId(disciplina)) {
+      disciplinaExistente = await Disciplina.findById(disciplina);
+    }
+
+    if (!disciplinaExistente) {
+      disciplinaExistente = await Disciplina.findOne({ nome: disciplina });
+    }
+
+    if (!disciplinaExistente) {
+      return res.status(404).json({ message: `Disciplina não encontrada: ${disciplina}` });
+    }
+
+    
+    const conceito = await Conceito.findOne({ aluno: alunoId, disciplina: disciplinaExistente });
 
     if (!conceito) {
       return res.status(404).json({ message: "Conceito não encontrado" });
@@ -103,23 +133,47 @@ exports.getConceitosPorTurmaEDisciplina = async (req, res) => {
   }
 };
 
-exports.getConceitosAluno = async (req, res) => {
+exports.getConceitosPorTurmaEDisciplinaAlunoClient = async (req, res) => {
   try {
-    if (!req.user || !req.user._id) {
-      return res.status(403).json({ message: "Acesso não autorizado. Faça login novamente." });
+    const { disciplina } = req.body;
+    //Filtro para o usuário(aluno) ser buscado pela turma que está presente no seu modelo
+    const turma = req.user.turma;
+
+    if (!turma || !disciplina) {
+      return res.status(400).json({ message: "Turma e disciplina devem ser fornecidas." });
     }
 
-    const conceitos = await Conceito.find({ aluno: req.user._id })
-      .populate("disciplina", "nome")
-      .lean();
+    // Busca da turma
+    const turmaEncontrada = (await Turma.findById(turma)) || (await Turma.findOne({ nome: turma }));
+
+    if (!turmaEncontrada) {
+      return res.status(404).json({ message: "Turma não encontrada." });
+    }
+
+    // Busca da disciplina
+    const disciplinaEncontrada = (await Disciplina.findById(disciplina)) || (await Disciplina.findOne({ nome: disciplina }));
+
+    // Se a Disciplina não for encontrada
+    if (!disciplinaEncontrada) {
+      return res.status(404).json({ message: "Disciplina não encontrada." });
+    }
+
+    // Verifica se req.user está disponível
+    if (!req.user || !req.user._id) {
+      return res.status(403).json({ message: "Aluno não autorizado. Faça login novamente." });
+    }
+
+    // Busca os conceitos do aluno logado
+    const conceitos = await Conceito.find({aluno: req.user._id, // Aluno logado
+    disciplina: disciplinaEncontrada._id, // Disciplina fornecida
+    });
 
     if (!conceitos.length) {
-      return res.status(404).json({ message: "Nenhum conceito encontrado para este aluno." });
+      return res.status(404).json({ message: "Nenhum conceito encontrado para a disciplina especificada." });
     }
 
     return res.status(200).json(conceitos);
   } catch (error) {
-    console.error("Erro ao buscar conceitos do aluno:", error);
-    return res.status(500).json({ message: "Erro ao buscar conceitos do aluno", error: error.message });
+    return res.status(500).json({ message: "Erro ao buscar conceitos", error: error.message });
   }
 };
