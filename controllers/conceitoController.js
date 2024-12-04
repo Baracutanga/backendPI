@@ -39,8 +39,7 @@ exports.updateNotaUnidade = async (req, res) => {
       return res.status(404).json({ message: `Disciplina não encontrada: ${disciplina}` });
     }
 
-    
-    const conceito = await Conceito.findOne({ aluno: alunoId, disciplina: disciplinaExistente });
+    const conceito = await Conceito.findOne({ aluno: alunoExistente._id, disciplina: disciplinaExistente._id });
 
     if (!conceito) {
       return res.status(404).json({ message: "Conceito não encontrado" });
