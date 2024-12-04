@@ -22,7 +22,7 @@ const loginRoutes = require("./routes/loginRoutes");
 
 dotenv.config();
 
-DB = "mongodb+srv://rogercauarcb:1500@users.wq3oh.mongodb.net/projetoIntegrador";
+DB = process.env.DB_URL;
 
 mongoose.connect(DB)
 .then(() => console.log("Conectado ao Banco de Dados"))
