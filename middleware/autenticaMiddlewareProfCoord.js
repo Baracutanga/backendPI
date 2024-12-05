@@ -16,7 +16,11 @@ const authenticateProfCoord = async (req, res, next) => {
       return res.status(403).json({ error: "Acesso negado. Apenas Professores ou Coordenadores podem acessar." });
     }
 
-    req.user = user;
+    req.user = {
+      user: user.user, 
+      email: user.email,
+      nome: user.nome,
+    };
     next();
   } catch (error) {
     res.status(401).json({ error: "Token inválido ou expirado." });
