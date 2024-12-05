@@ -10,7 +10,7 @@ router.get('/', autenticaMiddlewareCoordenador, turmaController.getAllTurmas);
 
 router.get('/horario', autenticaMiddlewareAluno, turmaController.getHorarioAula);
 
-router.put('/horario', autenticaMiddlewareAluno, turmaController.updateHorarioAula);
+router.put('/horario', autenticaMiddlewareAluno, turmaController.updateHorarioDeAula);
 
 router.delete('/delete/:id?', autenticaMiddlewareCoordenador, turmaController.deleteTurma);
 
