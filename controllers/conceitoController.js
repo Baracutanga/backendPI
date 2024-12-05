@@ -61,10 +61,38 @@ exports.updateNotaUnidade = async (req, res) => {
 
 exports.updateAnual = async (req, res) => {
   try {
-    const { alunoId, disciplinaId, tipoNota, valor } = req.body;
+    const { aluno, disciplina, tipoNota, valor } = req.body;
 
-    if (!alunoId || !disciplinaId || !tipoNota || valor === undefined) {
+    if (!aluno || !disciplina || !tipoNota || valor === undefined) {
       return res.status(400).json({ message: "ID do aluno, disciplina, tipo de nota ou valor não fornecidos" });
+    }
+
+    let alunoExistente;
+
+    if (mongoose.isValidObjectId(aluno)) {
+      alunoExistente = await User.findById(aluno);
+    }
+
+    if (!alunoExistente) {
+      alunoExistente = await User.findOne({ nome: aluno });
+    }
+
+    if (!alunoExistente) {
+      return res.status(404).json({ message: `Aluno não encontrado: ${aluno}` });
+    }
+
+    let disciplinaExistente;
+
+    if (mongoose.isValidObjectId(disciplina)) {
+      disciplinaExistente = await Disciplina.findById(disciplina);
+    }
+
+    if (!disciplinaExistente) {
+      disciplinaExistente = await Disciplina.findOne({ nome: disciplina });
+    }
+
+    if (!disciplinaExistente) {
+      return res.status(404).json({ message: `Disciplina não encontrada: ${disciplina}` });
     }
 
     const conceito = await Conceito.findOne({ aluno: alunoId, disciplina: disciplinaId });
@@ -95,31 +123,39 @@ exports.getConceitosPorTurmaEDisciplina = async (req, res) => {
       return res.status(400).json({ message: "ID ou nome da turma e disciplina não fornecidos" });
     }
 
-    let turmaEncontrada = await Turma.findById(turma).populate('alunos');
+    let turmaExistente;
 
-    if (!turmaEncontrada) {
-      turmaEncontrada = await Turma.findOne({ nome: turma }).populate('alunos');
+    if (mongoose.isValidObjectId(turma)) {
+      turmaExistente = await Turma.findById(turma);
     }
 
-    if (!turmaEncontrada) {
-      return res.status(404).json({ message: "Turma não encontrada" });
+    if (!turmaExistente) {
+      turmaExistente = await Turma.findOne({ nome: turma });
     }
 
-    const alunosIds = turmaEncontrada.alunos.map(aluno => aluno._id);
-
-    let disciplinaEncontrada = await Disciplina.findById(disciplina);
-
-    if (!disciplinaEncontrada) {
-      disciplinaEncontrada = await Disciplina.findOne({ nome: disciplina });
+    if (!turmaExistente) {
+      return res.status(404).json({ message: `turma não encontrada: ${turma}` });
     }
 
-    if (!disciplinaEncontrada) {
-      return res.status(404).json({ message: "Disciplina não encontrada" });
+    const alunosIds = turmaExistente.alunos.map(aluno => aluno._id);
+
+    let disciplinaExistente;
+
+    if (mongoose.isValidObjectId(disciplina)) {
+      disciplinaExistente = await Disciplina.findById(disciplina);
+    }
+
+    if (!disciplinaExistente) {
+      disciplinaExistente = await Disciplina.findOne({ nome: disciplina });
+    }
+
+    if (!disciplinaExistente) {
+      return res.status(404).json({ message: `Disciplina não encontrada: ${disciplina}` });
     }
 
     const conceitos = await Conceito.find({
       aluno: { $in: alunosIds },
-      disciplina: disciplinaEncontrada._id
+      disciplina: disciplinaExistente._id
     });
 
     if (!conceitos.length) {
