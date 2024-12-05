@@ -17,6 +17,7 @@ const authenticateCoordenador = async (req, res, next) => {
     }
 
     req.user = {
+      id: user._id,
       user: user.user, 
       email: user.email,
       nome: user.nome,
