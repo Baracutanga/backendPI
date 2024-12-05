@@ -8,7 +8,7 @@ router.post('/create', autenticaMiddlewareCoordenador, turmaController.createTur
 
 router.get('/', autenticaMiddlewareCoordenador, turmaController.getAllTurmas);
 
-router.get('/horario', autenticaMiddlewareAluno, turmaController.getHorarioAula);
+router.get('/horario', autenticaMiddlewareAluno, turmaController.getHorarioDeAula);
 
 router.put('/horario', autenticaMiddlewareAluno, turmaController.updateHorarioDeAula);
 
