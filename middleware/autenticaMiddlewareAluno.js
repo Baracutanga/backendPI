@@ -16,7 +16,11 @@ const authenticateAluno = async (req, res, next) => {
       return res.status(403).json({ error: "Acesso negado. Contate a coordenação." });
     }
 
-    req.user = user;
+    req.user = {
+      user: user.user, 
+      email: user.email,
+      nome: user.nome,
+    };
     next();
   } catch (error) {
     res.status(401).json({ error: "Token inválido ou expirado." });
