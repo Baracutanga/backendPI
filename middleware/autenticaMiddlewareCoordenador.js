@@ -16,7 +16,11 @@ const authenticateCoordenador = async (req, res, next) => {
       return res.status(403).json({ message: "Acesso negado. Apenas Coordenadores podem acessar." });
     }
 
-    req.user = user;
+    req.user = {
+      user: user.user, 
+      email: user.email,
+      nome: user.nome,
+    };
     next();
   } catch (error) {
     res.status(401).json({ message: "Token inválido ou expirado." });
