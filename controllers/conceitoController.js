@@ -132,47 +132,23 @@ exports.getConceitosPorTurmaEDisciplina = async (req, res) => {
   }
 };
 
-exports.getConceitosPorTurmaEDisciplinaAlunoClient = async (req, res) => {
+exports.getConceitosAluno = async (req, res) => {
   try {
-    const { disciplina } = req.body;
-    //Filtro para o usuário(aluno) ser buscado pela turma que está presente no seu modelo
-    const turma = req.user.turma;
-
-    if (!turma || !disciplina) {
-      return res.status(400).json({ message: "Turma e disciplina devem ser fornecidas." });
-    }
-
-    // Busca da turma
-    const turmaEncontrada = (await Turma.findById(turma)) || (await Turma.findOne({ nome: turma }));
-
-    if (!turmaEncontrada) {
-      return res.status(404).json({ message: "Turma não encontrada." });
-    }
-
-    // Busca da disciplina
-    const disciplinaEncontrada = (await Disciplina.findById(disciplina)) || (await Disciplina.findOne({ nome: disciplina }));
-
-    // Se a Disciplina não for encontrada
-    if (!disciplinaEncontrada) {
-      return res.status(404).json({ message: "Disciplina não encontrada." });
-    }
-
-    // Verifica se req.user está disponível
     if (!req.user || !req.user._id) {
-      return res.status(403).json({ message: "Aluno não autorizado. Faça login novamente." });
+      return res.status(403).json({ message: "Acesso não autorizado. Faça login novamente." });
     }
 
-    // Busca os conceitos do aluno logado
-    const conceitos = await Conceito.find({aluno: req.user._id, // Aluno logado
-    disciplina: disciplinaEncontrada._id, // Disciplina fornecida
-    });
+    const conceitos = await Conceito.find({ aluno: req.user._id })
+      .populate("disciplina", "nome")
+      .lean();
 
     if (!conceitos.length) {
-      return res.status(404).json({ message: "Nenhum conceito encontrado para a disciplina especificada." });
+      return res.status(404).json({ message: "Nenhum conceito encontrado para este aluno." });
     }
 
     return res.status(200).json(conceitos);
   } catch (error) {
-    return res.status(500).json({ message: "Erro ao buscar conceitos", error: error.message });
+    console.error("Erro ao buscar conceitos do aluno:", error);
+    return res.status(500).json({ message: "Erro ao buscar conceitos do aluno", error: error.message });
   }
 };
