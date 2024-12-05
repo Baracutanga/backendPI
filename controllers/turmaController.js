@@ -116,3 +116,54 @@ exports.deleteTurma = async (req, res) => {
     return res.status(500).json({ message: "Erro ao deletar turma", err });
   }
 };
+
+exports.getHorarioDeAula = async (req, res) => {
+  try {
+    const turmaId = req.user.turma; 
+
+    if (!turmaId) {
+      return res.status(400).json({ message: "Usuário não possui turma associada." });
+    }
+
+    const turma = await Turma.findById(turmaId);
+
+    if (!turma) {
+      return res.status(404).json({ message: `Turma não encontrada com o ID: ${turmaId}` });
+    }
+
+    return res.status(200).json({ message: "Horário de aula encontrado com sucesso!", horarioDeAula: turma.horarioDeAula });
+  } catch (error) {
+    console.error("Erro ao buscar horário de aula:", error);
+    return res.status(500).json({ message: "Erro ao buscar horário de aula.", error });
+  }
+};
+
+exports.updateHorarioDeAula = async (req, res) => {
+  try {
+    const turmaId = req.user.turma; 
+    const { horarioDeAula } = req.body; 
+
+    if (!horarioDeAula) {
+      return res.status(400).json({ message: "O campo 'horarioDeAula' é obrigatório." });
+    }
+
+    if (!turmaId) {
+      return res.status(400).json({ message: "Usuário não possui turma associada." });
+    }
+
+    const turma = await Turma.findByIdAndUpdate(
+      turmaId,
+      { horarioDeAula }, 
+      { new: true } 
+    );
+
+    if (!turma) {
+      return res.status(404).json({ message: `Turma não encontrada com o ID: ${turmaId}` });
+    }
+
+    return res.status(200).json({ message: "Horário de aula atualizado com sucesso!", turma });
+  } catch (error) {
+    console.error("Erro ao atualizar horário de aula:", error);
+    return res.status(500).json({ message: "Erro ao atualizar horário de aula.", error });
+  }
+};
